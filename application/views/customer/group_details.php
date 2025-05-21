@@ -57,10 +57,7 @@
                             <th>Service Type</th>
                             <th>Deskripsi</th>
                             <th>Contact</th>
-                            <th>VLAN</th>
-                            <th>IP Address</th>
-                            <th>Prefix</th>
-                            <th>Cross Connect ID</th>
+                            <th>Network</th>
                             <th>SO</th>
                             <th>SDN</th>
                             <th>Topology</th>
@@ -127,7 +124,8 @@
                             <td><?= htmlspecialchars($cust->deskripsi) ?></td>
                             <td><?= htmlspecialchars($cust->contact) ?></td>
                                 <td>
-                                    <button data-bs-toggle="modal" data-bs-target="#networkModal<?= $cust->id ?>">
+                                    <button class="btn btn-outline-primary btn-sm"
+                                    data-bs-toggle="modal" data-bs-target="#networkModal<?= $cust->id ?>">
                                     Network
                                     </button>
                                 </td>
