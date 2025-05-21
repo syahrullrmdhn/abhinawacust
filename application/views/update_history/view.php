@@ -3,7 +3,7 @@
   
   <!-- Button to add an update -->
   <div class="mb-3">
-    <a href="<?= base_url('update_history/add_update'); ?>" class="btn btn-primary">Add Update</a>
+    <a href="<?= base_url('index.php/update_history/add_update'); ?>" class="btn btn-primary">Add Update</a>
   </div>
 
   <table class="table table-bordered">
@@ -33,7 +33,7 @@
           <td><?= $update->author; ?></td>
           <td>
             <?php if (!$update->koreksi): ?>
-              <a href="<?= base_url('update_history/add_correction/'.$update->id); ?>" class="btn btn-warning btn-sm">Add Correction</a>
+              <a href="<?= base_url('index.php/update_history/add_correction/'.$update->id); ?>" class="btn btn-warning btn-sm">Add Correction</a>
             <?php else: ?>
               <span class="text-muted">Correction Added</span>
             <?php endif; ?>

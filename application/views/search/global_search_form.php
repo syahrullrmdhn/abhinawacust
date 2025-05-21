@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <h2>Search</h2>
-    <form method="get" action="<?= base_url('search'); ?>" class="mb-4">
+    <form method="get" action="<?= base_url('index.php/search'); ?>" class="mb-4">
         <div class="input-group">
             <!-- Search input field -->
             <input 

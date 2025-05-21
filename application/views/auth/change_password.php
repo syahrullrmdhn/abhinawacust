@@ -15,7 +15,7 @@
   <?php endif; ?>
 
   <!-- Change Password Form -->
-  <form action="<?= base_url('auth/update_password'); ?>" method="post">
+  <form action="<?= base_url('index.php/auth/update_password'); ?>" method="post">
     <div class="mb-3">
       <label for="old_password" class="form-label">Old Password</label>
       <input type="password" class="form-control" name="old_password" required>

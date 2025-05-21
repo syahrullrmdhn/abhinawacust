@@ -8,7 +8,7 @@
     </div>
   <?php endif; ?>
 
-  <a href="<?= base_url('customer_groups/create'); ?>" class="btn btn-primary mb-3">Add New Customer Group</a>
+  <a href="<?= base_url('index.php/customer_groups/create'); ?>" class="btn btn-primary mb-3">Add New Customer Group</a>
 
                     <table class="table table-hover align-middle text-center">
                         <thead class="bg-primary text-white">
@@ -26,8 +26,8 @@
           <td><?= $group->group_name; ?></td>
           <td><?= $group->description; ?></td>
           <td>
-            <a href="<?= base_url('customer_groups/edit/' . $group->id); ?>" class="btn btn-warning btn-sm">Edit</a>
-            <a href="<?= base_url('customer_groups/delete/' . $group->id); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this customer group?');">Delete</a>
+            <a href="<?= base_url('index.php/customer_groups/edit/' . $group->id); ?>" class="btn btn-warning btn-sm">Edit</a>
+            <a href="<?= base_url('index.php/customer_groups/delete/' . $group->id); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this customer group?');">Delete</a>
           </td>
         </tr>
       <?php endforeach; ?>

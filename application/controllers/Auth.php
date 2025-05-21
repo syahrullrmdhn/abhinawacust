@@ -12,7 +12,7 @@ class Auth extends CI_Controller {
 
     public function index() {
         if ($this->session->userdata('logged_in')) {
-            redirect('dashboard');
+            redirect('index.php/dashboard');
         }
         $this->load->view('auth/login');
     }
@@ -29,16 +29,16 @@ class Auth extends CI_Controller {
                 'logged_in' => true
             ];
             $this->session->set_userdata($session_data);
-            redirect('dashboard');
+            redirect('index.php/dashboard');
         } else {
             $this->session->set_flashdata('login_error', 'Username atau password salah.');
-            redirect('auth');
+            redirect('index.php/auth');
         }
     }
 
     public function change_password() {
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth'); // Redirect ke login jika belum login
+            redirect('index.php/auth'); // Redirect ke login jika belum login
         }
         $this->load->view('template/header');
         $this->load->view('auth/change_password');
@@ -48,7 +48,7 @@ class Auth extends CI_Controller {
     // Handle password update
     public function update_password() {
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth'); // Redirect ke login jika belum login
+            redirect('index.php/auth'); // Redirect ke login jika belum login
         }
 
         $username = $this->session->userdata('username');
@@ -59,25 +59,25 @@ class Auth extends CI_Controller {
         // Memastikan bahwa password baru dan konfirmasi password cocok
         if ($new_password !== $confirm_password) {
             $this->session->set_flashdata('error', 'Password baru dan konfirmasi password tidak cocok.');
-            redirect('auth/change_password');
+            redirect('index.php/auth/change_password');
         }
 
         // Verifikasi password lama
         $user = $this->auth_model->check_user($username, md5($old_password));
         if (!$user) {
             $this->session->set_flashdata('error', 'Password lama salah.');
-            redirect('auth/change_password');
+            redirect('index.php/auth/change_password');
         }
 
         // Update password jika password lama benar
         $this->auth_model->update_password($user->id, md5($new_password));
         $this->session->set_flashdata('success', 'Password berhasil diubah.');
-        redirect('auth/change_password');
+        redirect('index.php/auth/change_password');
     }
     
     public function logout() {
         $this->session->unset_userdata(['username', 'role_id', 'logged_in']);
         $this->session->sess_destroy();
-        redirect('auth');
+        redirect('index.php/auth');
     }
 }

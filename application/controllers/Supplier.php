@@ -14,7 +14,7 @@ class Supplier extends CI_Controller {
         $this->load->library('upload');
 
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth');
+            redirect('index.php/auth');
         } 
     }
 
@@ -93,7 +93,7 @@ class Supplier extends CI_Controller {
 
         $this->supplier_model->update_supplier($id, $data);
         $this->session->set_flashdata('success', 'Supplier and details updated successfully.');
-        redirect('supplier');
+        redirect('index.php/supplier');
     }    
 
     public function delete($id) {
@@ -103,7 +103,7 @@ class Supplier extends CI_Controller {
             $this->session->set_flashdata('error', 'Failed to delete supplier.');
         }
 
-        redirect('supplier'); 
+        redirect('index.php/supplier'); 
     }
 
     public function view_suppliers() {
@@ -215,7 +215,7 @@ public function add_supplier_detail($kdsupplier) {
         $this->supplier_model->insert_supplier_detail($data);
 
         // Redirect back to supplier details page
-        redirect('supplier/details/' . $kdsupplier);
+        redirect('index.php/supplier/details/' . $kdsupplier);
     }
 }
 }

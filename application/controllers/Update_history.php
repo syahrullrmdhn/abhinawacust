@@ -7,7 +7,7 @@ class Update_history extends CI_Controller {
         parent::__construct();
         $this->load->model('Update_history_model');
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth');
+            redirect('index.php/auth');
         }
     }
 
@@ -26,7 +26,7 @@ class Update_history extends CI_Controller {
 
         $this->Update_history_model->save_update_history($version, $changes, $author);
 
-        redirect('update_history/index');
+        redirect('index.php/update_history/index');
     }
 
     // Fungsi untuk menampilkan semua riwayat pembaruan
@@ -52,6 +52,6 @@ class Update_history extends CI_Controller {
 
         $this->Update_history_model->save_correction($id, $koreksi);
 
-        redirect('update_history/index');
+        redirect('index.php/update_history/index');
     }
 }

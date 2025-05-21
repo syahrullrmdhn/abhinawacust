@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <h2>Add New Customer</h2>
-    <form action="<?= base_url('customer/store_customer'); ?>" method="post" enctype="multipart/form-data">
+    <form action="<?= base_url('index.php/customer/store_customer'); ?>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="group_id" value="<?= $group_id; ?>">
 
         <!-- Customer Name Field -->

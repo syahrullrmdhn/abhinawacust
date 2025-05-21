@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <h2>Edit Supplier</h2>
 
-  <form action="<?= base_url('supplier/update/' . $supplier->kdsupplier); ?>" method="post" enctype="multipart/form-data">
+  <form action="<?= base_url('index.php/supplier/update/' . $supplier->kdsupplier); ?>" method="post" enctype="multipart/form-data">
     <!-- Supplier Code -->
     <div class="mb-3">
       <label for="kdsupplier" class="form-label">Supplier Code</label>
@@ -15,6 +15,6 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Update Supplier</button>
-    <a href="<?= base_url('supplier'); ?>" class="btn btn-secondary">Cancel</a>
+    <a href="<?= base_url('index.php/supplier'); ?>" class="btn btn-secondary">Cancel</a>
   </form>
 </div>

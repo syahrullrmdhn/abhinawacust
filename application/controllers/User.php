@@ -11,7 +11,7 @@ class User extends CI_Controller {
         $this->load->library('session');
         $this->load->helper('url');
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth');
+            redirect('index.php/auth');
         }
     }
 
@@ -36,7 +36,7 @@ class User extends CI_Controller {
 
         $this->user_model->create_user($username, $password, $role_id);
         $this->session->set_flashdata('success', 'User berhasil ditambahkan.');
-        redirect('user');
+        redirect('index.php/user');
     }
 
     public function edit($id) {
@@ -51,12 +51,12 @@ class User extends CI_Controller {
         $role_id = $this->input->post('role_id');
         $this->user_model->update_role($id, $role_id);
         $this->session->set_flashdata('success', 'Role user berhasil diupdate.');
-        redirect('user');
+        redirect('index.php/user');
     }
 
     public function delete($id) {
         $this->user_model->delete_user($id);
         $this->session->set_flashdata('success', 'User berhasil dihapus.');
-        redirect('user');
+        redirect('index.php/user');
     }
 }

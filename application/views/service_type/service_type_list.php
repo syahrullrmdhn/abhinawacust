@@ -30,7 +30,7 @@
           <td><?= $service_type->service_name; ?></td>
           <td><?= $service_type->description; ?></td>
           <td>
-            <a href="<?= base_url('service_type/edit/'.$service_type->id); ?>" class="btn btn-warning btn-sm">Edit</a>
+            <a href="<?= base_url('index.php/service_type/edit/'.$service_type->id); ?>" class="btn btn-warning btn-sm">Edit</a>
             <button onclick="confirmDelete(<?= $service_type->id; ?>)" class="btn btn-danger btn-sm">Delete</button>
           </td>
         </tr>
@@ -46,7 +46,7 @@
           <h5 class="modal-title" id="addServiceTypeModalLabel">Add New Service Type</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="<?= base_url('service_type/add'); ?>" method="post">
+        <form action="<?= base_url('index.php/service_type/add'); ?>" method="post">
           <div class="modal-body">
             <div class="mb-3">
               <label for="service_name" class="form-label">Service Name</label>
@@ -99,7 +99,7 @@
   document.getElementById('confirmDeleteButton').addEventListener('click', function() {
     if (deleteId) {
       // Redirect to delete action or make an AJAX call here
-      window.location.href = '<?= base_url('service_type/delete/'); ?>' + deleteId;
+      window.location.href = '<?= base_url('index.php/service_type/delete/'); ?>' + deleteId;
     }
   });
 </script>

@@ -12,7 +12,7 @@ class Dashboard extends CI_Controller {
         $this->load->helper('html');
         $this->load->library('session');
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth');
+            redirect('index.php/auth');
         }
     }
 

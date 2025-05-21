@@ -16,7 +16,7 @@ class Search extends CI_Controller {
         
         // Check authentication
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth');
+            redirect('index.php/auth');
         }
     }
 

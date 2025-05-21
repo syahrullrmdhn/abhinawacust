@@ -1,6 +1,6 @@
 <div class="container">
   <h2>Add Correction for Version <?= $update->version; ?></h2>
-  <form action="<?= base_url('update_history/save_correction'); ?>" method="post">
+  <form action="<?= base_url('index.php/update_history/save_correction'); ?>" method="post">
     <input type="hidden" name="id" value="<?= $update->id; ?>">
     <div class="mb-3">
       <label for="koreksi" class="form-label">Correction</label>

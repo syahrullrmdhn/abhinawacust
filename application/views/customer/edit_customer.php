@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <h2>Edit Customer</h2>
-    <form action="<?= base_url('customer/update_customer/' . $customer->id); ?>" method="post" enctype="multipart/form-data">
+    <form action="<?= base_url('index.php/customer/update_customer/' . $customer->id); ?>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="group_id" value="<?= $customer->customer_group_id; ?>">
 
         <div class="mb-3">
@@ -95,6 +95,6 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Update Customer</button>
-        <a href="<?= base_url('customer/group_details/' . $customer->customer_group_id); ?>" class="btn btn-secondary">Cancel</a>
+        <a href="<?= base_url('index.php/customer/group_details/' . $customer->customer_group_id); ?>" class="btn btn-secondary">Cancel</a>
     </form>
 </div>

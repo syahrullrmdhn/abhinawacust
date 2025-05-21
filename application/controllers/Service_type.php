@@ -8,7 +8,7 @@ class service_type extends CI_Controller {
         $this->load->model('service_type_model');
         $this->load->model('Update_history_model');
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth');
+            redirect('index.php/auth');
         }
     }
 
@@ -35,7 +35,7 @@ class service_type extends CI_Controller {
         $this->service_type_model->insert_service_type($data);
         $this->session->set_flashdata('success', 'Service type added successfully.');
     
-        redirect('service_type');
+        redirect('index.php/service_type');
     }
     
     public function update($id) {
@@ -54,7 +54,7 @@ class service_type extends CI_Controller {
             $this->session->set_flashdata('error', 'Failed to update service type.');
         }
         
-        redirect('service_type'); 
+        redirect('index.php/service_type'); 
     }
 
     public function delete($id) {

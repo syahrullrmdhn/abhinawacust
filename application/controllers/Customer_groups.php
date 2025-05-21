@@ -8,7 +8,7 @@ class Customer_groups extends CI_Controller {
         $this->load->model('customer_groups_model');
         $this->load->model('Update_history_model');
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth');
+            redirect('index.php/auth');
         }
     }
 
@@ -37,7 +37,7 @@ class Customer_groups extends CI_Controller {
         ];
         $this->customer_groups_model->insert_customer_group($data);
         $this->session->set_flashdata('success', 'Customer group added successfully.');
-        redirect('customer_groups');
+        redirect('index.php/customer_groups');
     }
 
     // Display form to edit an existing customer group
@@ -57,13 +57,13 @@ class Customer_groups extends CI_Controller {
         ];
         $this->customer_groups_model->update_customer_group($id, $data);
         $this->session->set_flashdata('success', 'Customer group updated successfully.');
-        redirect('customer_groups');
+        redirect('index.php/customer_groups');
     }
 
     // Delete customer group
     public function delete($id) {
         $this->customer_groups_model->delete_customer_group($id);
         $this->session->set_flashdata('success', 'Customer group deleted successfully.');
-        redirect('customer_groups');
+        redirect('index.php/customer_groups');
     }
 }

@@ -17,7 +17,7 @@ class customer extends CI_Controller {
             $this->load->library('email', $this->config->item('email'));
 
         if (!$this->session->userdata('logged_in')) {
-            redirect('auth');
+            redirect('index.php/auth');
         }
     }    
 
@@ -25,7 +25,7 @@ public function index() {
     $search = $this->input->get('search');
 
     $config = [
-        'base_url' => base_url('customer/index'),
+        'base_url' => base_url('index.php/customer/index'),
         'total_rows' => $this->Customer_model->count_customer_groups($search),
         'per_page' => 5,
         'page_query_string' => TRUE,
@@ -80,7 +80,7 @@ public function index() {
             // Validasi group_id
             if (!$group_id || !is_numeric($group_id)) {
                 $this->session->set_flashdata('error', 'Invalid group ID specified.');
-                redirect('customer/index');
+                redirect('index.php/customer/index');
                 return;
             }
 
@@ -133,7 +133,7 @@ public function index() {
                 $this->session->set_flashdata('error', 'Failed to add customer.');
             }
         
-            redirect('customer/group_details/' . $data['customer_group_id']);
+            redirect('index.php/customer/group_details/' . $data['customer_group_id']);
         } 
         
         private function upload_file($field_name) {
@@ -155,7 +155,7 @@ public function index() {
             // Check if the user has the required role
             if ($this->session->userdata('role_id') != 1) {
                 $this->session->set_flashdata('error', 'Unauthorized access.');
-                redirect('customer/index');
+                redirect('index.php/customer/index');
                 return;
             }
         
@@ -174,7 +174,7 @@ public function index() {
             // Cek role
             if ($this->session->userdata('role_id') != 1) {
                 $this->session->set_flashdata('error', 'Unauthorized access.');
-                redirect('customer/index');
+                redirect('index.php/customer/index');
                 return;
             }
         
@@ -208,7 +208,7 @@ public function index() {
             }
         
             $this->session->set_flashdata('success', 'Customer updated successfully.');
-            redirect('customer/group_details/' . $this->input->post('group_id'));
+            redirect('index.php/customer/group_details/' . $this->input->post('group_id'));
         }
         
         
@@ -216,13 +216,13 @@ public function index() {
             // Check if the user has the required role
             if ($this->session->userdata('role_id') != 1) {
                 $this->session->set_flashdata('error', 'Unauthorized access.');
-                redirect('customer');
+                redirect('index.php/customer');
                 return;
             }
         
             $this->Customer_model->delete_customer($customer_id);
             $this->session->set_flashdata('success', 'Customer deleted successfully.');
-            redirect('customer');
+            redirect('index.php/customer');
         }
         public function get_service_type_description($service_type_id) {
             $this->load->model('service_type_model');
@@ -261,7 +261,7 @@ public function index() {
     
             // Redirect atau tampilkan flash
             $this->session->set_flashdata('success', 'Service-end notifications processed.');
-            redirect('customer');
+            redirect('index.php/customer');
         }
     
         // Kirim notifikasi terminasi untuk satu customer
