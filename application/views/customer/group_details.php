@@ -19,12 +19,12 @@
            onclick="return confirm('Send end-of-service notifications for all due customers?');">
            <i class="fa fa-envelope"></i> Send All End Notifications
         </a>
-        <!-- Tombol Manual Test Email -->
-        <!-- <a href="<?= base_url('index.php/customer/test_email') ?>"
+        < Tombol Manual Test Email -->
+        <!-- <!-- <a href="<?= base_url('index.php/customer/test_email') ?>"
            class="btn btn-info"
            onclick="return confirm('Send test email?');">
            <i class="fa fa-paper-plane"></i> Test Email
-        </a> --> -->
+        </a> -->
     </div>
 <?php endif; ?>
 
