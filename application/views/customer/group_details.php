@@ -11,16 +11,16 @@
 
     <?php if ($role_id == 1): ?>
     <div class="mb-3">
-        <a href="<?= base_url('index.php/customer/add_customer/' . $group_id) ?>" class="btn btn-success">
+        <a href="<?= base_url('customer/add_customer/' . $group_id) ?>" class="btn btn-success">
             <i class="fa fa-plus"></i> Add New Customer
         </a>
-        <a href="<?= base_url('index.php/customer/check_service_end_dates') ?>"
+        <a href="<?= base_url('customer/check_service_end_dates') ?>"
            class="btn btn-primary"
            onclick="return confirm('Send end-of-service notifications for all due customers?');">
            <i class="fa fa-envelope"></i> Send All End Notifications
         </a>
         <!-- Tombol Manual Test Email -->
-        <a href="<?= base_url('index.php/customer/test_email') ?>"
+        <a href="<?= base_url('customer/test_email') ?>"
            class="btn btn-info"
            onclick="return confirm('Send test email?');">
            <i class="fa fa-paper-plane"></i> Test Email
@@ -126,10 +126,15 @@
                             </td>
                             <td><?= htmlspecialchars($cust->deskripsi) ?></td>
                             <td><?= htmlspecialchars($cust->contact) ?></td>
-                            <td><?= htmlspecialchars($cust->vlan) ?></td>
-                            <td><?= htmlspecialchars($cust->ip_address) ?></td>
-                            <td><?= htmlspecialchars($cust->prefix) ?></td>
-                            <td><?= htmlspecialchars($cust->xconnect_id) ?></td>
+                                <td>
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#networkModal<?= $cust->id_customer ?>">
+                                    Network
+                                </button>
+                            </td>
                             <td>
                                 <button class="btn btn-outline-primary btn-sm"
                                         data-bs-toggle="modal" data-bs-target="#fileModal"
@@ -167,11 +172,11 @@
                                                     title="Notify Termination">
                                             <i class="fa fa-envelope"></i>
                                  </button>
-                                    <a href="<?= base_url('index.php/customer/edit_customer/' . $cust->id) ?>"
+                                    <a href="<?= base_url('customer/edit_customer/' . $cust->id) ?>"
                                        class="btn btn-secondary btn-sm">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <a href="<?= base_url('index.php/customer/delete_customer/' . $cust->id) ?>"
+                                    <a href="<?= base_url('customer/delete_customer/' . $cust->id) ?>"
                                        class="btn btn-danger btn-sm"
                                        onclick="return confirm('Delete <?= htmlspecialchars($cust->customer) ?>?');">
                                         <i class="fa fa-trash"></i>
@@ -189,7 +194,52 @@
         <p class="text-muted">No customers found in this group.</p>
     <?php endif; ?>
 </div>
-
+<!-- File View Network -->
+ <div
+    class="modal fade"
+    id="networkModal<?= $cust->id_customer ?>"
+    tabindex="-1"
+    aria-labelledby="networkModalLabel<?= $cust->id_customer ?>"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5
+                    class="modal-title"
+                    id="networkModalLabel<?= $cust->id_customer ?>"
+                >
+                    Network Details
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>VLAN:</strong>
+                   <?= htmlspecialchars($cust->vlan) ?></p>
+                <p><strong>IP Address:</strong>
+                   <?= htmlspecialchars($cust->ip_address) ?></p>
+                <p><strong>Prefix:</strong>
+                   <?= htmlspecialchars($cust->prefix) ?></p>
+                <p><strong>XConnect ID:</strong>
+                   <?= htmlspecialchars($cust->xconnect_id) ?></p>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- File View Modal -->
 <div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -280,7 +330,7 @@ const terminationModalEl = document.getElementById('terminationModal');
     this.disabled = true;
     this.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Mengirim...`;
 
-    fetch(`<?= base_url('index.php/customer/notify_termination/') ?>${currentCustomerId}`, {
+    fetch(`<?= base_url('customer/notify_termination/') ?>${currentCustomerId}`, {
       method: 'POST',
       headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
