@@ -14,7 +14,7 @@
         <a href="<?= base_url('index.php/customer/add_customer/' . $group_id) ?>" class="btn btn-success">
             <i class="fa fa-plus"></i> Add New Customer
         </a>
-        <a href="<?= base_url('index.php/customer/check_service_end_dates') ?>"
+        <!-- <a href="<?= base_url('index.php/customer/check_service_end_dates') ?>"
            class="btn btn-primary"
            onclick="return confirm('Send end-of-service notifications for all due customers?');">
            <i class="fa fa-envelope"></i> Send All End Notifications
@@ -24,7 +24,7 @@
            class="btn btn-info"
            onclick="return confirm('Send test email?');">
            <i class="fa fa-paper-plane"></i> Test Email
-        </a>
+        </a> -->
     </div>
 <?php endif; ?>
 
