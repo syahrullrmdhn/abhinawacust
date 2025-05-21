@@ -127,14 +127,10 @@
                             <td><?= htmlspecialchars($cust->deskripsi) ?></td>
                             <td><?= htmlspecialchars($cust->contact) ?></td>
                                 <td>
-                                <button
-                                    type="button"
-                                    class="btn btn-sm btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#networkModal<?= $cust->id_customer ?>">
+                                    <button data-bs-toggle="modal" data-bs-target="#networkModal<?= $cust->id ?>">
                                     Network
-                                </button>
-                            </td>
+                                    </button>
+                                </td>
                             <td>
                                 <button class="btn btn-outline-primary btn-sm"
                                         data-bs-toggle="modal" data-bs-target="#fileModal"
@@ -182,6 +178,23 @@
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </td>
+                                    <div class="modal fade" id="networkModal<?= $cust->id ?>" tabindex="-1" ...>
+                            <div class="modal-dialog"><div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title">Network Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body text-start">
+                                <p><strong>VLAN:</strong> <?= htmlspecialchars($cust->vlan) ?></p>
+                                <p><strong>IP Address:</strong> <?= htmlspecialchars($cust->ip_address) ?></p>
+                                <p><strong>Prefix:</strong> <?= htmlspecialchars($cust->prefix) ?></p>
+                                <p><strong>Cross Connect ID:</strong> <?= htmlspecialchars($cust->xconnect_id) ?></p>
+                                </div>
+                                <div class="modal-footer">
+                                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div></div>
+                            </div>
                             <?php endif; ?>
                         </tr>
                         <?php endforeach; ?>
@@ -194,51 +207,6 @@
         <p class="text-muted">No customers found in this group.</p>
     <?php endif; ?>
 </div>
-<!-- File View Network -->
- <div
-    class="modal fade"
-    id="networkModal<?= $cust->id_customer ?>"
-    tabindex="-1"
-    aria-labelledby="networkModalLabel<?= $cust->id_customer ?>"
-    aria-hidden="true"
->
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5
-                    class="modal-title"
-                    id="networkModalLabel<?= $cust->id_customer ?>"
-                >
-                    Network Details
-                </h5>
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                ></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>VLAN:</strong>
-                   <?= htmlspecialchars($cust->vlan) ?></p>
-                <p><strong>IP Address:</strong>
-                   <?= htmlspecialchars($cust->ip_address) ?></p>
-                <p><strong>Prefix:</strong>
-                   <?= htmlspecialchars($cust->prefix) ?></p>
-                <p><strong>XConnect ID:</strong>
-                   <?= htmlspecialchars($cust->xconnect_id) ?></p>
-            </div>
-            <div class="modal-footer">
-                <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                >
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
 </div>
 <!-- File View Modal -->
 <div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
