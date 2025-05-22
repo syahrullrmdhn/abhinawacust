@@ -177,47 +177,61 @@ public function index() {
             $this->load->view('template/footer', $data);
         }
         
-        public function update_customer($customer_id) {
-            // Cek role
-            if ($this->session->userdata('role_id') != 1) {
-                $this->session->set_flashdata('error', 'Unauthorized access.');
-                redirect('customer/index');
-                return;
-            }
-        
-            // Ambil data lama untuk cek perubahan status
-            $old = $this->Customer_model->get_customer_by_id($customer_id);
-            $old_status = $old->status;
-        
-            // Siapkan data baru
-            $data = [
-                'customer'        => $this->input->post('customer'),
-                'kdsupplier'      => $this->input->post('kdsupplier'),
-                'cid_supp'        => $this->input->post('cid_supp'),
-                'service_type_id' => $this->input->post('service_type_id'),
-                'start_date'      => $this->input->post('start_date'),
-                'end_date'        => $this->input->post('end_date'),
-                'status'          => $this->input->post('status'),
-            ];
-        
-            // File upload seperti sebelumnya...
-            if (!empty($_FILES['no_so']['name']))      $data['no_so']   = $this->upload_file('no_so');
-            if (!empty($_FILES['no_sdn']['name']))     $data['no_sdn']  = $this->upload_file('no_sdn');
-            if (!empty($_FILES['topology']['name']))   $data['topology']= $this->upload_file('topology');
-        
-            // Update di database
-            $this->Customer_model->update_customer($customer_id, $data);
-        
-            // **Notifikasi jika status berubah**
-            $new_status = $data['status'];
-            if ($old_status != $new_status) {
-                $this->notify_status_change($customer_id, $old_status, $new_status);
-            }
-        
-            $this->session->set_flashdata('success', 'Customer updated successfully.');
-            redirect('customer/group_details/' . $this->input->post('group_id'));
-        }
-        
+public function update_customer($customer_id) {
+    // Cek role
+    if ($this->session->userdata('role_id') != 1) {
+        $this->session->set_flashdata('error', 'Unauthorized access.');
+        redirect('index.php/customer/index');
+        return;
+    }
+
+    // Ambil data lama untuk cek perubahan status
+    $old = $this->Customer_model->get_customer_by_id($customer_id);
+    $old_status = $old->status;
+
+    // Siapkan data baru
+    $data = [
+        'customer'        => $this->input->post('customer'),
+        'kdsupplier'      => $this->input->post('kdsupplier'),
+        'cid_supp'        => $this->input->post('cid_supp'),
+        'cid_abh'         => $this->input->post('cid_abh'),
+        'service_type_id' => $this->input->post('service_type_id'),
+        'sla'             => $this->input->post('sla'),
+        'deskripsi'       => $this->input->post('deskripsi'),
+        'contact'         => $this->input->post('contact'),
+        'vlan'            => $this->input->post('vlan'),
+        'ip_address'      => $this->input->post('ip_address'),
+        'prefix'          => $this->input->post('prefix'),
+        'xconnect_id'     => $this->input->post('xconnect_id'),
+        'start_date'      => $this->input->post('start_date'),
+        'end_date'        => $this->input->post('end_date'),
+        'status'          => $this->input->post('status'),
+    ];
+
+    // File upload seperti sebelumnya...
+    if (!empty($_FILES['no_so']['name'])) {
+        $data['no_so'] = $this->upload_file('no_so');
+    }
+    if (!empty($_FILES['no_sdn']['name'])) {
+        $data['no_sdn'] = $this->upload_file('no_sdn');
+    }
+    if (!empty($_FILES['topology']['name'])) {
+        $data['topology'] = $this->upload_file('topology');
+    }
+
+    // Update di database
+    $this->Customer_model->update_customer($customer_id, $data);
+
+    // Notifikasi jika status berubah
+    $new_status = $data['status'];
+    if ($old_status != $new_status) {
+        $this->notify_status_change($customer_id, $old_status, $new_status);
+    }
+
+    $this->session->set_flashdata('success', 'Customer updated successfully.');
+    redirect('customer/group_details/' . $this->input->post('group_id'));
+}
+
         
         public function delete_customer($customer_id) {
             // Check if the user has the required role
