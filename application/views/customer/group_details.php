@@ -253,88 +253,87 @@
     </div>
   </div>
 </div>
+<script>
+  const BASE_URL = '<?= rtrim(base_url(), '/') ?>/';
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // 1) File‐viewer helper with fallback download link
+  // 1) Document Viewer (SO/SDN/Topology)
   window.loadFile = function(filename, title) {
     const url     = BASE_URL + 'uploads/' + filename;
     const label   = document.getElementById('fileModalLabel');
     const content = document.getElementById('fileContent');
-    label.textContent = title;
-    content.innerHTML = `
+    label.textContent   = title;
+    content.innerHTML   = `
       <iframe src="${url}" style="width:100%;height:500px;border:0;"></iframe>
       <p class="mt-3 text-center">
         <a href="${url}" target="_blank" class="btn btn-outline-secondary">
           Download ${title}
         </a>
-      </p>
-    `;
+      </p>`;
   };
 
-  // 2) Service‐type modal loader
+  // 2) Service-Type Description (gunakan modal yang sama)
   window.loadServiceTypeDescription = function(id, name) {
+    const url     = BASE_URL + 'index.php/customer/get_service_type_description/' + id;
     const label   = document.getElementById('fileModalLabel');
     const content = document.getElementById('fileContent');
     label.textContent = 'Service Type: ' + name;
-    fetch(BASE_URL + 'index.php/customer/get_service_type_description/' + id)
+    fetch(url)
       .then(res => res.text())
       .then(html => content.innerHTML = html)
       .catch(() => content.innerHTML = '<p class="text-danger">Failed to load description.</p>');
   };
 
-  // 3) Termination‐notification logic
+  // 3) Termination-Notification
   const terminationModalEl = document.getElementById('terminationModal');
-  if (!terminationModalEl) return;
+  if (terminationModalEl) {
+    const terminationModal = new bootstrap.Modal(terminationModalEl);
+    const toastEl          = document.getElementById('emailToast');
+    const toastBody        = document.getElementById('emailToastBody');
+    const toast            = new bootstrap.Toast(toastEl);
+    let currentCustomerId  = null;
 
-  const terminationModal = new bootstrap.Modal(terminationModalEl);
-  const toastEl          = document.getElementById('emailToast');
-  const toastBody        = document.getElementById('emailToastBody');
-  const toast            = new bootstrap.Toast(toastEl);
-  let currentCustomerId  = null;
-
-  // Open confirm modal
-  document.querySelectorAll('.btn-notify-termination').forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentCustomerId = btn.dataset.id;
-      const custName = btn.dataset.customer;
-      document.getElementById('terminationModalLabel').textContent = 'Notify Termination: ' + custName;
-      document.getElementById('terminationModalBody').textContent  = `Kirim email notifikasi terminasi untuk "${custName}"?`;
-      terminationModal.show();
-    });
-  });
-
-  // Handle “Kirim Notifikasi” click
-  const confirmBtn = document.getElementById('confirmTerminateBtn');
-  if (confirmBtn) {
-    confirmBtn.addEventListener('click', function() {
-      confirmBtn.disabled = true;
-      confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mengirim...';
-
-      fetch(BASE_URL + 'index.php/customer/notify_termination/' + currentCustomerId, {
-        method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      })
-      .then(res => res.json())
-      .then(data => {
-        terminationModal.hide();
-        confirmBtn.disabled = false;
-        confirmBtn.innerHTML = 'Kirim Notifikasi';
-        toastEl.classList.replace('bg-danger', 'bg-success');
-        toastBody.textContent = data.message;
-        toast.show();
-      })
-      .catch(() => {
-        terminationModal.hide();
-        confirmBtn.disabled = false;
-        confirmBtn.innerHTML = 'Kirim Notifikasi';
-        toastEl.classList.replace('bg-success', 'bg-danger');
-        toastBody.textContent = 'Error mengirim notifikasi';
-        toast.show();
+    document.querySelectorAll('.btn-notify-termination').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentCustomerId = btn.dataset.id;
+        const custName    = btn.dataset.customer;
+        document.getElementById('terminationModalLabel').textContent = 'Notify Termination: ' + custName;
+        document.getElementById('terminationModalBody').textContent  = `Kirim email notifikasi terminasi untuk "${custName}"?`;
+        terminationModal.show();
       });
     });
+
+    const confirmBtn = document.getElementById('confirmTerminateBtn');
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', function() {
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mengirim...';
+
+        fetch(BASE_URL + 'index.php/customer/notify_termination/' + currentCustomerId, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+          terminationModal.hide();
+          this.disabled = false;
+          this.innerHTML = 'Kirim Notifikasi';
+          toastEl.classList.replace('bg-danger', 'bg-success');
+          toastBody.textContent = data.message;
+          toast.show();
+        })
+        .catch(() => {
+          terminationModal.hide();
+          this.disabled = false;
+          this.innerHTML = 'Kirim Notifikasi';
+          toastEl.classList.replace('bg-success', 'bg-danger');
+          toastBody.textContent = 'Error mengirim notifikasi';
+          toast.show();
+        });
+      });
+    }
   }
 });
 </script>
-
-
