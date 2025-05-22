@@ -255,71 +255,87 @@
 </div>
 
 <script>
-function loadFile(url, title) {
-    document.getElementById('fileModalLabel').innerText = title;
-    document.getElementById('fileContent').innerHTML =
-        `<iframe src="${url}" style="width:100%;height:500px;border:0;"></iframe>`;
-}
+document.addEventListener('DOMContentLoaded', function() {
+  // 1) File‐viewer helper with fallback download link
+  function loadFile(url, title) {
+    const label   = document.getElementById('fileModalLabel');
+    const content = document.getElementById('fileContent');
+    label.textContent = title;
+    content.innerHTML = `
+      <iframe src="${url}" style="width:100%;height:500px;border:0;"></iframe>
+      <p class="mt-3 text-center">
+        <a href="${url}" target="_blank" class="btn btn-outline-secondary">
+          Download ${title}
+        </a>
+      </p>
+    `;
+  }
+  // expose globally
+  window.loadFile = loadFile;
 
-function loadServiceTypeDescription(id, name) {
-    document.getElementById('fileModalLabel').innerText = 'Service Type: ' + name;
-    fetch(`<?= base_url('index.php/customer/get_service_type_description') ?>/${id}`)
-        .then(res => res.text())
-        .then(html => {
-            document.getElementById('fileContent').innerHTML = html;
+  // 2) Service‐type modal loader
+  function loadServiceTypeDescription(id, name) {
+    const label   = document.getElementById('fileModalLabel');
+    const content = document.getElementById('fileContent');
+    label.textContent = 'Service Type: ' + name;
+    fetch('<?= base_url("index.php/customer/get_service_type_description") ?>/' + id)
+      .then(res => res.text())
+      .then(html => content.innerHTML = html)
+      .catch(() => content.innerHTML = '<p class="text-danger">Failed to load description.</p>');
+  }
+  window.loadServiceTypeDescription = loadServiceTypeDescription;
+
+  // 3) Termination‐notification logic
+  const terminationModalEl = document.getElementById('terminationModal');
+  if (terminationModalEl) {
+    const terminationModal = new bootstrap.Modal(terminationModalEl);
+    const toastEl          = document.getElementById('emailToast');
+    const toastBody        = document.getElementById('emailToastBody');
+    const toast            = new bootstrap.Toast(toastEl);
+    let currentCustomerId  = null;
+
+    // Open confirm modal
+    document.querySelectorAll('.btn-notify-termination').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentCustomerId = btn.dataset.id;
+        const custName = btn.dataset.customer;
+        document.getElementById('terminationModalLabel').textContent = 'Notify Termination: ' + custName;
+        document.getElementById('terminationModalBody').textContent  = `Kirim email notifikasi terminasi untuk "${custName}"?`;
+        terminationModal.show();
+      });
+    });
+
+    // Handle “Kirim Notifikasi” click
+    const confirmBtn = document.getElementById('confirmTerminateBtn');
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', function() {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mengirim...';
+
+        fetch('<?= base_url("index.php/customer/notify_termination") ?>/' + currentCustomerId, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+          terminationModal.hide();
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = 'Kirim Notifikasi';
+          toastEl.classList.replace('bg-danger', 'bg-success');
+          toastBody.textContent = data.message;
+          toast.show();
         })
         .catch(() => {
-            document.getElementById('fileContent').innerHTML = '<p class="text-danger">Failed to load description.</p>';
+          terminationModal.hide();
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = 'Kirim Notifikasi';
+          toastEl.classList.replace('bg-success', 'bg-danger');
+          toastBody.textContent = 'Error mengirim notifikasi';
+          toast.show();
         });
-}
-const terminationModalEl = document.getElementById('terminationModal');
-  const terminationModal   = new bootstrap.Modal(terminationModalEl);
-  const toastEl            = document.getElementById('emailToast');
-  const toastBody          = document.getElementById('emailToastBody');
-  const toast              = new bootstrap.Toast(toastEl);
-
-  let currentCustomerId = null;
-
-  // Buka modal saat tombol diklik
-  document.querySelectorAll('.btn-notify-termination').forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentCustomerId = btn.dataset.id;
-      const custName    = btn.dataset.customer;
-      document.getElementById('terminationModalLabel').innerText = 'Notify Termination: ' + custName;
-      document.getElementById('terminationModalBody').innerText  = `Kirim email notifikasi terminasi untuk "${custName}"?`;
-      terminationModal.show();
-    });
-  });
-
-  // Saat user konfirmasi di modal
-  document.getElementById('confirmTerminateBtn').addEventListener('click', function() {
-    this.disabled = true;
-    this.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Mengirim...`;
-
-    fetch(`<?= base_url('index.php/customer/notify_termination/') ?>${currentCustomerId}`, {
-      method: 'POST',
-      headers: { 'X-Requested-With': 'XMLHttpRequest' }
-    })
-    .then(res => res.json())
-    .then(data => {
-      terminationModal.hide();
-      this.disabled = false;
-      this.innerHTML = 'Kirim Notifikasi';
-
-      // Show success toast
-      toastEl.classList.replace('bg-danger','bg-success');
-      toastBody.innerText = data.message;
-      toast.show();
-    })
-    .catch(() => {
-      terminationModal.hide();
-      this.disabled = false;
-      this.innerHTML = 'Kirim Notifikasi';
-
-      // Show error toast
-      toastEl.classList.replace('bg-success','bg-danger');
-      toastBody.innerText = 'Error mengirim notifikasi';
-      toast.show();
-    });
-  });
+      });
+    }
+  }
+});
 </script>
+
