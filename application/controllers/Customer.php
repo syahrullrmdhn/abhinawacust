@@ -17,7 +17,7 @@ class customer extends CI_Controller {
             $this->load->library('email', $this->config->item('email'));
 
         if (!$this->session->userdata('logged_in')) {
-            redirect('index.php/auth');
+            redirect('auth');
         }
     }    
 
@@ -25,7 +25,7 @@ public function index() {
     $search = $this->input->get('search');
 
     $config = [
-        'base_url' => base_url('index.php/customer/index'),
+        'base_url' => base_url('customer/index'),
         'total_rows' => $this->Customer_model->count_customer_groups($search),
         'per_page' => 5,
         'page_query_string' => TRUE,
@@ -80,7 +80,7 @@ public function index() {
             // Validasi group_id
             if (!$group_id || !is_numeric($group_id)) {
                 $this->session->set_flashdata('error', 'Invalid group ID specified.');
-                redirect('index.php/customer/index');
+                redirect('customer/index');
                 return;
             }
 
@@ -117,24 +117,31 @@ public function index() {
                 'no_sdn'              => $this->upload_file('no_sdn'),
                 'topology'            => $this->upload_file('topology'),
                 'service_type_id'     => $this->input->post('service_type_id'),
+                'status'     => $this->input->post('status'),
                 'start_date'          => $this->input->post('start_date'),
                 'end_date'            => $this->input->post('end_date'),
                 'sla'                 => $this->input->post('sla'),
+                'prefix'                 => $this->input->post('prefix'),
+                'deskripsi'                 => $this->input->post('deskripsi'),
+                'contact'                 => $this->input->post('contact'),
+                'vlan'                 => $this->input->post('vlan'),
+                'ip_address'                 => $this->input->post('ip_address'),
+                'xconnect_id'                 => $this->input->post('xconnect_id'),
             ];
         
             // Insert dan ambil ID
-            $new_id = $this->Customer_model->insert_customer($data);
-            if ($new_id) {
-                // Kirim notifikasi untuk customer baru
-                $this->notify_new_customer($new_id);
-        
-                $this->session->set_flashdata('success', 'Customer added and notification sent.');
-            } else {
-                $this->session->set_flashdata('error', 'Failed to add customer.');
-            }
-        
-            redirect('index.php/customer/group_details/' . $data['customer_group_id']);
-        } 
+                $new_id = $this->Customer_model->insert_customer($data);
+                if ($new_id) {
+                    // // Kirim notifikasi untuk customer baru
+                    // $this->notify_new_customer($new_id);
+            
+                    $this->session->set_flashdata('success', 'Customer added and notification sent.');
+                } else {
+                    $this->session->set_flashdata('error', 'Failed to add customer.');
+                }
+            
+                redirect('customer/group_details/' . $data['customer_group_id']);
+            } 
         
         private function upload_file($field_name) {
             $config['upload_path'] = './uploads/';
@@ -155,7 +162,7 @@ public function index() {
             // Check if the user has the required role
             if ($this->session->userdata('role_id') != 1) {
                 $this->session->set_flashdata('error', 'Unauthorized access.');
-                redirect('index.php/customer/index');
+                redirect('customer/index');
                 return;
             }
         
@@ -174,7 +181,7 @@ public function index() {
             // Cek role
             if ($this->session->userdata('role_id') != 1) {
                 $this->session->set_flashdata('error', 'Unauthorized access.');
-                redirect('index.php/customer/index');
+                redirect('customer/index');
                 return;
             }
         
@@ -208,7 +215,7 @@ public function index() {
             }
         
             $this->session->set_flashdata('success', 'Customer updated successfully.');
-            redirect('index.php/customer/group_details/' . $this->input->post('group_id'));
+            redirect('customer/group_details/' . $this->input->post('group_id'));
         }
         
         
@@ -216,13 +223,13 @@ public function index() {
             // Check if the user has the required role
             if ($this->session->userdata('role_id') != 1) {
                 $this->session->set_flashdata('error', 'Unauthorized access.');
-                redirect('index.php/customer');
+                redirect('customer');
                 return;
             }
         
             $this->Customer_model->delete_customer($customer_id);
             $this->session->set_flashdata('success', 'Customer deleted successfully.');
-            redirect('index.php/customer');
+            redirect('customer');
         }
         public function get_service_type_description($service_type_id) {
             $this->load->model('service_type_model');
@@ -261,7 +268,7 @@ public function index() {
     
             // Redirect atau tampilkan flash
             $this->session->set_flashdata('success', 'Service-end notifications processed.');
-            redirect('index.php/customer');
+            redirect('customer');
         }
     
         // Kirim notifikasi terminasi untuk satu customer
@@ -393,81 +400,81 @@ public function index() {
         }
     
         // Kirim notifikasi untuk customer baru
-private function notify_new_customer($customer_id)
-{
-    $c = $this->Customer_model->get_customer_by_id($customer_id);
-    if (! $c) {
-        log_message('error', "notify_new_customer(): customer ID {$customer_id} not found");
-        return;
-    }
+// private function notify_new_customer($customer_id)
+// {
+//     $c = $this->Customer_model->get_customer_by_id($customer_id);
+//     if (! $c) {
+//         log_message('error', "notify_new_customer(): customer ID {$customer_id} not found");
+//         return;
+//     }
 
-    // Styled notification with Poppins font and brand colors
-    $html  = '<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>New Customer Onboarded</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: "Poppins", sans-serif;
-            background-color: #f4f6f8;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        .card {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            max-width: 600px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-        .card-header {
-            background-color: #2E86C1;
-            color: #fff;
-            padding: 16px 20px;
-            font-size: 20px;
-            font-weight: 600;
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .card-body p {
-            margin: 12px 0;
-            line-height: 1.5;
-        }
-        .label {
-            color: #2E86C1;
-            font-weight: 600;
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <div class="card-header">
-            🎉 New Customer Onboarded
-        </div>
-        <div class="card-body">
-            <p>New customer onboarded under <span class="label">Group ' . htmlspecialchars($c->customer_group_id) . '</span>. Let’s give them our best!</p>
-            <p><span class="label">SID:</span> ' . htmlspecialchars($c->cid_abh) . '</p>
-            <p><span class="label">Service:</span> ' . htmlspecialchars($this->get_service_type_name($c->service_type_id)) . '</p>
-            <p><span class="label">Start Date:</span> ' . date('j F Y', strtotime($c->start_date)) . '</p>
-            <p><span class="label">End Date:</span> ' . date('j F Y', strtotime($c->end_date)) . '</p>
-            <p>Team, let’s stay sharp and ready to support. If any issues arise, address them promptly. Let’s keep up the great work! 💪</p>
-        </div>
-    </div>
-</body>
-</html>';
+//     // Styled notification with Poppins font and brand colors
+//     $html  = '<!DOCTYPE html>
+// <html lang="en">
+// <head>
+//     <meta charset="UTF-8">
+//     <title>New Customer Onboarded</title>
+//     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+//     <style>
+//         body {
+//             font-family: "Poppins", sans-serif;
+//             background-color: #f4f6f8;
+//             color: #333;
+//             margin: 0;
+//             padding: 20px;
+//         }
+//         .card {
+//             background-color: #ffffff;
+//             border-radius: 8px;
+//             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+//             max-width: 600px;
+//             margin: 0 auto;
+//             overflow: hidden;
+//         }
+//         .card-header {
+//             background-color: #2E86C1;
+//             color: #fff;
+//             padding: 16px 20px;
+//             font-size: 20px;
+//             font-weight: 600;
+//         }
+//         .card-body {
+//             padding: 20px;
+//         }
+//         .card-body p {
+//             margin: 12px 0;
+//             line-height: 1.5;
+//         }
+//         .label {
+//             color: #2E86C1;
+//             font-weight: 600;
+//         }
+//     </style>
+// </head>
+// <body>
+//     <div class="card">
+//         <div class="card-header">
+//             🎉 New Customer Onboarded
+//         </div>
+//         <div class="card-body">
+//             <p>New customer onboarded under <span class="label">Group ' . htmlspecialchars($c->customer_group_name) . '</span>. Let’s give them our best!</p>
+//             <p><span class="label">SID:</span> ' . htmlspecialchars($c->cid_abh) . '</p>
+//             <p><span class="label">Service:</span> ' . htmlspecialchars($this->get_service_type_name($c->service_type_id)) . '</p>
+//             <p><span class="label">Start Date:</span> ' . date('j F Y', strtotime($c->start_date)) . '</p>
+//             <p><span class="label">End Date:</span> ' . date('j F Y', strtotime($c->end_date)) . '</p>
+//             <p>Team, let’s stay sharp and ready to support. If any issues arise, address them promptly. Let’s keep up the great work! 💪</p>
+//         </div>
+//     </div>
+// </body>
+// </html>';
 
-    $this->send_email_and_notify(
-        '🆕 New Customer Onboarded – ' . htmlspecialchars($c->customer),
-        $html,
-        'new_customer_notification',
-        $customer_id
-    );
-}
+//     $this->send_email_and_notify(
+//         '🆕 New Customer Onboarded – ' . htmlspecialchars($c->customer),
+//         $html,
+//         'new_customer_notification',
+//         $customer_id
+//     );
+// }
 
 
 
@@ -688,10 +695,6 @@ private function send_email_and_notify($subject, $html_message, $notification_ty
     $this->email->from('syahrul@c-tech.id', '[Development] - Abhinawa Customer Notification');
     $this->email->to([
         'syahrul@abhinawa.co.id',
-        'daulay@abhinawa.co.id',
-        'yuniar@abhinawa.co.id',
-        'aulia.putri@abhinawa.co.id',
-        'toni@abhinawa.co.id',
     ]);
     $this->email->subject($subject);
     $this->email->message($html_message);
