@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <h2>Add New Customer</h2>
-    <form action="<?= base_url('index.php/customer/store_customer'); ?>" method="post" enctype="multipart/form-data">
+    <form action="<?= base_url('customer/store_customer'); ?>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="group_id" value="<?= $group_id; ?>">
 
         <!-- Customer Name Field -->
@@ -35,16 +35,16 @@
             </select>
         </div>
 
-
         <!-- CID Abh Field -->
         <div class="mb-3">
             <label for="cid_abh" class="form-label">SID Customer</label>
             <input type="text" class="form-control" name="cid_abh" required>
         </div>
 
+        <!-- SLA Customer -->
         <div class="mb-3">
-            <label for="sla" class="form-label">SLA Customer</label>
-            <input type="text" class="form-control" name="sla" required>
+            <label for="sla" class="form-label">SLA Customer (%)</label>
+            <input type="number" class="form-control" name="sla" min="0" max="100" required>
         </div>
 
         <!-- Service Type Selection -->
@@ -54,6 +54,53 @@
                 <?php foreach ($service_types as $service_type): ?>
                     <option value="<?= $service_type->id; ?>"><?= $service_type->service_name; ?></option>
                 <?php endforeach; ?>
+            </select>
+        </div>
+
+        <!-- Deskripsi -->
+        <div class="mb-3">
+            <label for="deskripsi" class="form-label">Deskripsi</label>
+            <textarea class="form-control" name="deskripsi" rows="2"></textarea>
+        </div>
+
+        <!-- Contact -->
+        <div class="mb-3">
+            <label for="contact" class="form-label">Contact</label>
+            <input type="text" class="form-control" name="contact">
+        </div>
+
+        <!-- VLAN -->
+        <div class="mb-3">
+            <label for="vlan" class="form-label">VLAN</label>
+            <input type="number" class="form-control" name="vlan">
+        </div>
+
+        <!-- IP Address -->
+        <div class="mb-3">
+            <label for="ip_address" class="form-label">IP Address</label>
+            <input type="text" class="form-control" name="ip_address">
+        </div>
+
+        <!-- Prefix -->
+        <div class="mb-3">
+            <label for="prefix" class="form-label">Prefix</label>
+            <input type="text" class="form-control" name="prefix">
+        </div>
+
+        <!-- Cross Connect ID -->
+        <div class="mb-3">
+            <label for="xconnect_id" class="form-label">Cross Connect ID</label>
+            <input type="text" class="form-control" name="xconnect_id">
+        </div>
+
+        <!-- Status -->
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-control" name="status" required>
+                <option value="1">Active</option>
+                <option value="2">Suspend</option>
+                <option value="3">Inactive</option>
+                <option value="4">Terminated</option>
             </select>
         </div>
 
