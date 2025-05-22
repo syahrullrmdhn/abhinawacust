@@ -229,7 +229,7 @@ public function update_customer($customer_id) {
     }
 
     $this->session->set_flashdata('success', 'Customer updated successfully.');
-    redirect('customer/group_details/' . $this->input->post('group_id'));
+    redirect('index.php/customer/group_details/' . $this->input->post('group_id'));
 }
 
         
@@ -237,13 +237,13 @@ public function update_customer($customer_id) {
             // Check if the user has the required role
             if ($this->session->userdata('role_id') != 1) {
                 $this->session->set_flashdata('error', 'Unauthorized access.');
-                redirect('customer');
+                redirect('index.php/customer');
                 return;
             }
         
             $this->Customer_model->delete_customer($customer_id);
             $this->session->set_flashdata('success', 'Customer deleted successfully.');
-            redirect('customer');
+            redirect('index.php/customer');
         }
         public function get_service_type_description($service_type_id) {
             $this->load->model('service_type_model');
